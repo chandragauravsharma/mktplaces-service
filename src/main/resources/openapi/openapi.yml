@@ -55,9 +55,37 @@ paths:
         '500':
           description: Internal server error
 
-  /items:
+  /users/{userId}/products:
     get:
-      summary: Get all items
+      operationId: getAllProductsListedByUser
+      summary: Get all products listed by a user
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: String
+          description: ID of the user to retrieve product listings for
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Internal server error
+
+  /products:
+    get:
+      operationId: getAllProducts
+      summary: Get all products
+      tags:
+        - Product
       responses:
         '200':
           description: A list of items
@@ -66,23 +94,56 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Item'
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Internal server error
 
     post:
-      summary: Create a new item
+      operationId: createProduct
+      summary: Create a new product
+      tags:
+        - Product
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Item'
+              $ref: '#/components/schemas/ProductCreationRequest'
       responses:
-        '201':
-          description: Item created successfully
+        '200':
+          description: Product created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/schemas/ProductCreationResponse'
+        '500':
+          description: Internal server error
+
+  /products/{productId}:
+    get:
+      operationId: getProductById
+      summary: Get a product by Id
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the product to retrieve
+      responses:
+        '200':
+          description: product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
 
   /transactions:
     get:
@@ -147,6 +208,46 @@ components:
           $ref: '#/components/schemas/User'
           description: The created user object
 
+    ProductCreationRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+          minLength: 1
+          maxLength: 50
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+        base_price:
+          type: number
+          format: double
+        quantity_available:
+          type: integer
+          format: int64
+      required:
+        - user_id
+        - name
+        - description
+        - base_price
+        - quantity_available
+
+    ProductCreationResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        user:
+          $ref: '#/components/schemas/Product'
+          description: The created product object
+
     User:
       type: object
       properties:
@@ -175,20 +276,28 @@ components:
           type: integer
           format: int64
 
-    Item:
+    Product:
       type: object
       properties:
-        id:
+        product_id:
           type: integer
           format: int64
+        user_id:
+          type: string
+          minLength: 1
+          maxLength: 50
         name:
           type: string
-        price:
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+        base_price:
           type: number
           format: double
-        quantity:
-          type: integer
-        sellerId:
+        quantity_available:
           type: integer
           format: int64
         createdAt:

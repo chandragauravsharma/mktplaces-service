@@ -1,6 +1,7 @@
 package com.mktplace.api.impl;
 
 import com.mktplace.api.UserApiDelegate;
+import com.mktplace.model.Product;
 import com.mktplace.model.User;
 import com.mktplace.model.UserCreationRequest;
 import com.mktplace.model.UserCreationResponse;
@@ -29,6 +30,14 @@ public class UserApiDelegateImpl implements UserApiDelegate {
     public Mono<ResponseEntity<UserCreationResponse>> createUser(Mono<UserCreationRequest> userCreationRequest, ServerWebExchange exchange) {
         return userService.createUser(userCreationRequest)
                 .map(userCreationResponse -> ResponseEntity.status(HttpStatus.OK).body(userCreationResponse))
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+
+    @Override
+    public Mono<ResponseEntity<Flux<Product>>> getAllProductsListedByUser(String userId, ServerWebExchange exchange) {
+        return userService.getAllProductsListedByUser(userId)
+                .collectList()
+                .map(products -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(products)))
                 .defaultIfEmpty(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 }

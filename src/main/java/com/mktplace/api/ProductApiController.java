@@ -1,9 +1,8 @@
 package com.mktplace.api;
 
 import com.mktplace.model.Product;
-import com.mktplace.model.User;
-import com.mktplace.model.UserCreationRequest;
-import com.mktplace.model.UserCreationResponse;
+import com.mktplace.model.ProductCreationRequest;
+import com.mktplace.model.ProductCreationResponse;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +30,16 @@ import jakarta.annotation.Generated;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Controller
 @RequestMapping("${openapi.mktplaceAppAPIs.base-path:/api/v1}")
-public class UserApiController implements UserApi {
+public class ProductApiController implements ProductApi {
 
-    private final UserApiDelegate delegate;
+    private final ProductApiDelegate delegate;
 
-    public UserApiController(@Autowired(required = false) UserApiDelegate delegate) {
-        this.delegate = Optional.ofNullable(delegate).orElse(new UserApiDelegate() {});
+    public ProductApiController(@Autowired(required = false) ProductApiDelegate delegate) {
+        this.delegate = Optional.ofNullable(delegate).orElse(new ProductApiDelegate() {});
     }
 
     @Override
-    public UserApiDelegate getDelegate() {
+    public ProductApiDelegate getDelegate() {
         return delegate;
     }
 

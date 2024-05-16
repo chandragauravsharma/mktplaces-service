@@ -1,0 +1,17 @@
+src/main/java/com/mktplace/api/ApiUtil.java
+src/main/java/com/mktplace/api/DefaultApi.java
+src/main/java/com/mktplace/api/DefaultApiController.java
+src/main/java/com/mktplace/api/DefaultApiDelegate.java
+src/main/java/com/mktplace/api/ProductApi.java
+src/main/java/com/mktplace/api/ProductApiController.java
+src/main/java/com/mktplace/api/ProductApiDelegate.java
+src/main/java/com/mktplace/api/UserApi.java
+src/main/java/com/mktplace/api/UserApiController.java
+src/main/java/com/mktplace/api/UserApiDelegate.java
+src/main/java/com/mktplace/model/Product.java
+src/main/java/com/mktplace/model/ProductCreationRequest.java
+src/main/java/com/mktplace/model/ProductCreationResponse.java
+src/main/java/com/mktplace/model/Transaction.java
+src/main/java/com/mktplace/model/User.java
+src/main/java/com/mktplace/model/UserCreationRequest.java
+src/main/java/com/mktplace/model/UserCreationResponse.java

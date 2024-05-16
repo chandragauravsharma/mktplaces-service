@@ -5,7 +5,6 @@
  */
 package com.mktplace.api;
 
-import com.mktplace.model.Item;
 import com.mktplace.model.Transaction;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,61 +40,6 @@ public interface DefaultApi {
     default DefaultApiDelegate getDelegate() {
         return new DefaultApiDelegate() {};
     }
-
-    /**
-     * GET /items : Get all items
-     *
-     * @return A list of items (status code 200)
-     */
-    @Operation(
-        operationId = "itemsGet",
-        summary = "Get all items",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "A list of items", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Item.class)))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/items",
-        produces = { "application/json" }
-    )
-    default Mono<ResponseEntity<Flux<Item>>> itemsGet(
-        @Parameter(hidden = true) final ServerWebExchange exchange
-    ) {
-        return getDelegate().itemsGet(exchange);
-    }
-
-
-    /**
-     * POST /items : Create a new item
-     *
-     * @param item  (required)
-     * @return Item created successfully (status code 201)
-     */
-    @Operation(
-        operationId = "itemsPost",
-        summary = "Create a new item",
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Item created successfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Item.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/items",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    default Mono<ResponseEntity<Item>> itemsPost(
-        @Parameter(name = "Item", description = "", required = true) @Valid @RequestBody Mono<Item> item,
-        @Parameter(hidden = true) final ServerWebExchange exchange
-    ) {
-        return getDelegate().itemsPost(item, exchange);
-    }
-
 
     /**
      * GET /transactions : Get all transactions

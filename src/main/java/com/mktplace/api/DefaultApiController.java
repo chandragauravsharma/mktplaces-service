@@ -1,6 +1,5 @@
 package com.mktplace.api;
 
-import com.mktplace.model.Item;
 import com.mktplace.model.Transaction;
 
 

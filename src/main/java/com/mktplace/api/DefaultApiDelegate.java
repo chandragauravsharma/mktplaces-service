@@ -1,6 +1,5 @@
 package com.mktplace.api;
 
-import com.mktplace.model.Item;
 import com.mktplace.model.Transaction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,48 +25,6 @@ public interface DefaultApiDelegate {
 
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
-    }
-
-    /**
-     * GET /items : Get all items
-     *
-     * @return A list of items (status code 200)
-     * @see DefaultApi#itemsGet
-     */
-    default Mono<ResponseEntity<Flux<Item>>> itemsGet(ServerWebExchange exchange) {
-        Mono<Void> result = Mono.empty();
-        exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
-        for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
-            if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                String exampleString = "[ { \"createdAt\" : 5, \"quantity\" : 1, \"sellerId\" : 5, \"price\" : 6.027456183070403, \"name\" : \"name\", \"id\" : 0, \"updatedAt\" : 2 }, { \"createdAt\" : 5, \"quantity\" : 1, \"sellerId\" : 5, \"price\" : 6.027456183070403, \"name\" : \"name\", \"id\" : 0, \"updatedAt\" : 2 } ]";
-                result = ApiUtil.getExampleResponse(exchange, mediaType, exampleString);
-                break;
-            }
-        }
-        return result.then(Mono.empty());
-
-    }
-
-    /**
-     * POST /items : Create a new item
-     *
-     * @param item  (required)
-     * @return Item created successfully (status code 201)
-     * @see DefaultApi#itemsPost
-     */
-    default Mono<ResponseEntity<Item>> itemsPost(Mono<Item> item,
-        ServerWebExchange exchange) {
-        Mono<Void> result = Mono.empty();
-        exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
-        for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
-            if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                String exampleString = "{ \"createdAt\" : 5, \"quantity\" : 1, \"sellerId\" : 5, \"price\" : 6.027456183070403, \"name\" : \"name\", \"id\" : 0, \"updatedAt\" : 2 }";
-                result = ApiUtil.getExampleResponse(exchange, mediaType, exampleString);
-                break;
-            }
-        }
-        return result.then(item).then(Mono.empty());
-
     }
 
     /**

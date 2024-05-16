@@ -6,9 +6,8 @@
 package com.mktplace.api;
 
 import com.mktplace.model.Product;
-import com.mktplace.model.User;
-import com.mktplace.model.UserCreationRequest;
-import com.mktplace.model.UserCreationResponse;
+import com.mktplace.model.ProductCreationRequest;
+import com.mktplace.model.ProductCreationResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,58 +36,57 @@ import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Validated
-@Tag(name = "User", description = "the User API")
-public interface UserApi {
+@Tag(name = "Product", description = "the Product API")
+public interface ProductApi {
 
-    default UserApiDelegate getDelegate() {
-        return new UserApiDelegate() {};
+    default ProductApiDelegate getDelegate() {
+        return new ProductApiDelegate() {};
     }
 
     /**
-     * POST /users : Create a new user
+     * POST /products : Create a new product
      *
-     * @param userCreationRequest  (required)
-     * @return User created successfully (status code 200)
+     * @param productCreationRequest  (required)
+     * @return Product created successfully (status code 200)
      *         or Internal server error (status code 500)
      */
     @Operation(
-        operationId = "createUser",
-        summary = "Create a new user",
-        tags = { "User" },
+        operationId = "createProduct",
+        summary = "Create a new product",
+        tags = { "Product" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "User created successfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = UserCreationResponse.class))
+            @ApiResponse(responseCode = "200", description = "Product created successfully", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProductCreationResponse.class))
             }),
             @ApiResponse(responseCode = "500", description = "Internal server error")
         }
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/users",
+        value = "/products",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default Mono<ResponseEntity<UserCreationResponse>> createUser(
-        @Parameter(name = "UserCreationRequest", description = "", required = true) @Valid @RequestBody Mono<UserCreationRequest> userCreationRequest,
+    default Mono<ResponseEntity<ProductCreationResponse>> createProduct(
+        @Parameter(name = "ProductCreationRequest", description = "", required = true) @Valid @RequestBody Mono<ProductCreationRequest> productCreationRequest,
         @Parameter(hidden = true) final ServerWebExchange exchange
     ) {
-        return getDelegate().createUser(userCreationRequest, exchange);
+        return getDelegate().createProduct(productCreationRequest, exchange);
     }
 
 
     /**
-     * GET /users/{userId}/products : Get all products listed by a user
+     * GET /products : Get all products
      *
-     * @param userId ID of the user to retrieve product listings for (required)
-     * @return Product details (status code 200)
+     * @return A list of items (status code 200)
      *         or Internal server error (status code 500)
      */
     @Operation(
-        operationId = "getAllProductsListedByUser",
-        summary = "Get all products listed by a user",
-        tags = { "User" },
+        operationId = "getAllProducts",
+        summary = "Get all products",
+        tags = { "Product" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Product details", content = {
+            @ApiResponse(responseCode = "200", description = "A list of items", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class)))
             }),
             @ApiResponse(responseCode = "500", description = "Internal server error")
@@ -96,47 +94,46 @@ public interface UserApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/users/{userId}/products",
+        value = "/products",
         produces = { "application/json" }
     )
-    default Mono<ResponseEntity<Flux<Product>>> getAllProductsListedByUser(
-        @Parameter(name = "userId", description = "ID of the user to retrieve product listings for", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId,
+    default Mono<ResponseEntity<Flux<Product>>> getAllProducts(
         @Parameter(hidden = true) final ServerWebExchange exchange
     ) {
-        return getDelegate().getAllProductsListedByUser(userId, exchange);
+        return getDelegate().getAllProducts(exchange);
     }
 
 
     /**
-     * GET /users/{userId} : Get user details by Id
+     * GET /products/{productId} : Get a product by Id
      *
-     * @param userId ID of the user to retrieve (required)
-     * @return User details (status code 200)
-     *         or User not found (status code 404)
+     * @param productId ID of the product to retrieve (required)
+     * @return product details (status code 200)
+     *         or Product not found (status code 404)
      *         or Internal server error (status code 500)
      */
     @Operation(
-        operationId = "getUserById",
-        summary = "Get user details by Id",
-        tags = { "User" },
+        operationId = "getProductById",
+        summary = "Get a product by Id",
+        tags = { "Product" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "User details", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))
+            @ApiResponse(responseCode = "200", description = "product details", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))
             }),
-            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "404", description = "Product not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/users/{userId}",
+        value = "/products/{productId}",
         produces = { "application/json" }
     )
-    default Mono<ResponseEntity<User>> getUserById(
-        @Parameter(name = "userId", description = "ID of the user to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId,
+    default Mono<ResponseEntity<Product>> getProductById(
+        @Parameter(name = "productId", description = "ID of the product to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("productId") Long productId,
         @Parameter(hidden = true) final ServerWebExchange exchange
     ) {
-        return getDelegate().getUserById(userId, exchange);
+        return getDelegate().getProductById(productId, exchange);
     }
 
 }
