@@ -30,3 +30,6 @@ out/
 # OS-specific files
 .DS_Store
 Thumbs.db
+!/tmp/
+!/.openapi-generator/
+!/.openapi-generator-ignore

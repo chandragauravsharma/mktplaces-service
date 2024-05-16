@@ -1,0 +1,11 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/mktplace-db
+    username: username
+    password: password
+  datasource:
+    initialization-mode: always # If you want to enable database initialization
+  flyway:
+    enabled: true # If you're using Flyway for database migrations
+    locations: classpath:db/migration # Location of Flyway migration scripts
+    schemas: mktplace-schema # Schema to apply migrations to

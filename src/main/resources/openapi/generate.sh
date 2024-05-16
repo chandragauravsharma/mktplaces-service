@@ -1,0 +1,1 @@
+mvn -f pom-for-openapi.xml clean compile
