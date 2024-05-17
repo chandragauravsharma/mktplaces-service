@@ -1,7 +1,6 @@
 package com.mktplace.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,6 +37,8 @@ public class BookingDTO {
    */
   public enum StatusEnum {
     CREATED("created"),
+    
+    HOLD("hold"),
     
     BOOKED("booked"),
     

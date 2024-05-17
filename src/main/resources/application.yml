@@ -9,3 +9,10 @@ spring:
     enabled: true # If you're using Flyway for database migrations
     locations: classpath:db/migration # Location of Flyway migration scripts
     schemas: mktplace-schema # Schema to apply migrations to
+
+springdoc:
+  api-docs:
+    path: /api/v1/api-docs
+  swagger-ui:
+    path: api/v1/swagger-ui.html
+    url: /api/v1/api-docs

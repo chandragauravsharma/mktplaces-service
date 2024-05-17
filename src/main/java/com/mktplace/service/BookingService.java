@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
 @Service
 public class BookingService {
     @Autowired
@@ -30,19 +32,29 @@ public class BookingService {
         // and buyer exists in the system
         // + other conditions
         return checkoutRequest.flatMap(request -> {
-            BookingDTO bookingDTO = new BookingDTO();
-            bookingDTO.setBuyerId(request.getBuyerId());
-            bookingDTO.setSellerId(request.getSellerId());
-            bookingDTO.setProductId(request.getProductId());
-            bookingDTO.setTransactionAmount(request.getTransactionAmount());
-            bookingDTO.setStatus(BookingDTO.StatusEnum.CREATED);
+            // check if user can do this booking
+            // since a user is allowed to buy only one item in a month
+            return bookingRepository.findBookingsByBuyerIdInLastMonth(request.getBuyerId(), LocalDateTime.now().minusMonths(1))
+                    .flatMap(rows -> {
+                        if (rows > 1) {
+                            CheckoutResponse failureResponse = new CheckoutResponse();
+                            failureResponse.setStatus(CheckoutResponse.StatusEnum.FAILURE);
+                            return Mono.just(failureResponse);
+                        }
+                        BookingDTO bookingDTO = new BookingDTO();
+                        bookingDTO.setBuyerId(request.getBuyerId());
+                        bookingDTO.setSellerId(request.getSellerId());
+                        bookingDTO.setProductId(request.getProductId());
+                        bookingDTO.setTransactionAmount(request.getTransactionAmount());
+                        bookingDTO.setStatus(BookingDTO.StatusEnum.CREATED);
 
-            return bookingRepository.save(bookingDTO)
-                    .map(createdBooking -> {
-                        CheckoutResponse response = new CheckoutResponse();
-                        response.setStatus(CheckoutResponse.StatusEnum.SUCCESS);
-                        response.setBooking(objectMapper.convertValue(createdBooking, Booking.class));
-                        return response;
+                        return bookingRepository.save(bookingDTO)
+                                .map(createdBooking -> {
+                                    CheckoutResponse response = new CheckoutResponse();
+                                    response.setStatus(CheckoutResponse.StatusEnum.SUCCESS);
+                                    response.setBooking(objectMapper.convertValue(createdBooking, Booking.class));
+                                    return response;
+                                });
                     });
         });
     }
@@ -51,44 +63,40 @@ public class BookingService {
         return bookingRequest.flatMap(request -> {
             // validate booking id (similarly validate other params as well)
             if (request.getBookingId() == null) {
-                BookingResponse failureResponse = new BookingResponse();
-                failureResponse.setStatus(BookingResponse.StatusEnum.FAILURE);
-                return Mono.just(failureResponse);
+                return Mono.just(constructFailureResponse());
             }
 
             // put hold on product item
-            return productRepository.updateProductQuantitiesForHold(request.getProductId(), request.getSellerId())
-                    .flatMap(holdResponse -> {
-                        // if hold is success, update booking status and return success
-                        // else return failure
-                        if (holdResponse == 1) {
-                            // 1 row updated
-                            BookingDTO bookingDTO = new BookingDTO();
-                            bookingDTO.setBookingId(request.getBookingId());
-                            bookingDTO.setStatus(BookingDTO.StatusEnum.BOOKED);
-
-                            return bookingRepository.updateBookingStatus(request.getBookingId(), BookingDTO.StatusEnum.BOOKED)
-                                    .flatMap(updatedRows -> {
-                                        if (updatedRows == 1) {
-                                            return bookingRepository.findById(request.getBookingId())
-                                                    .map(res -> {
-                                                        BookingResponse response = new BookingResponse();
-                                                        response.setStatus(BookingResponse.StatusEnum.SUCCESS);
-                                                        response.setBooking(constructBookingResponse(res));
-                                                        return response;
-                                                    });
-                                        } else {
-                                            BookingResponse failureResponse = new BookingResponse();
-                                            failureResponse.setStatus(BookingResponse.StatusEnum.FAILURE);
-                                            return Mono.just(failureResponse);
-                                        }
-                                    });
-                        } else {
-                            // failure, 0 rows updated
-                            BookingResponse failureResponse = new BookingResponse();
-                            failureResponse.setStatus(BookingResponse.StatusEnum.FAILURE);
-                            return Mono.just(failureResponse);
+            return bookingRepository.findById(request.getBookingId())
+                    .flatMap(booking -> {
+                        if (booking.getStatus() != BookingDTO.StatusEnum.CREATED) {
+                            return Mono.just(constructFailureResponse());
                         }
+                        return productRepository.updateProductQuantitiesForHold(request.getProductId(), request.getSellerId())
+                                .flatMap(holdResponse -> {
+                                    // if hold is success, update booking status and return success
+                                    // else return failure
+                                    if (holdResponse == 1) {
+                                        // 1 row updated
+                                        return bookingRepository.updateBookingStatus(request.getBookingId(), BookingDTO.StatusEnum.HOLD)
+                                                .flatMap(updatedRows -> {
+                                                    if (updatedRows == 1) {
+                                                        return bookingRepository.findById(request.getBookingId())
+                                                                .map(res -> {
+                                                                    BookingResponse response = new BookingResponse();
+                                                                    response.setStatus(BookingResponse.StatusEnum.SUCCESS);
+                                                                    response.setBooking(constructBookingResponse(res));
+                                                                    return response;
+                                                                });
+                                                    } else {
+                                                        return Mono.just(constructFailureResponse());
+                                                    }
+                                                });
+                                    } else {
+                                        // failure, 0 rows updated
+                                        return Mono.just(constructFailureResponse());
+                                    }
+                                });
                     });
         });
     }
@@ -111,8 +119,16 @@ public class BookingService {
             case BOOKED -> booking.setStatus(Booking.StatusEnum.BOOKED);
             case REFUNDED -> booking.setStatus(Booking.StatusEnum.REFUNDED);
             case CANCELLED -> booking.setStatus(Booking.StatusEnum.CANCELLED);
+            case HOLD -> booking.setStatus(Booking.StatusEnum.HOLD);
         }
 
         return booking;
+    }
+
+    private BookingResponse constructFailureResponse() {
+        BookingResponse failureResponse = new BookingResponse();
+        failureResponse.setStatus(BookingResponse.StatusEnum.FAILURE);
+
+        return failureResponse;
     }
 }

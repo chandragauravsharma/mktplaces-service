@@ -17,6 +17,11 @@ public interface ProductRepository extends R2dbcRepository<ProductDTO, Long> {
     @Query("UPDATE products SET quantity_available = quantity_available - 1, quantity_on_hold = quantity_on_hold + 1 " +
             "WHERE product_id = :productId AND user_id = :userId")
     Mono<Integer> updateProductQuantitiesForHold(@Param("productId") Long productId, @Param("userId") Long userId);
+
+    @Modifying
+    @Query("UPDATE products SET quantity_on_hold = quantity_on_hold - 1, quantity_sold = quantity_sold + 1 " +
+            "WHERE product_id = :productId AND user_id = :userId")
+    Mono<Integer> updateProductQuantitiesForSoldOut(@Param("productId") Long productId, @Param("userId") Long userId);
 }
 
 

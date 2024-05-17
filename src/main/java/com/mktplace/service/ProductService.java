@@ -24,6 +24,11 @@ public class ProductService {
 
     public Mono<ProductCreationResponse> createProduct(Mono<ProductCreationRequest> productCreationRequest) {
         return productCreationRequest.flatMap(request -> {
+            if (request.getBasePrice() < 10.0 || request.getBasePrice() > 1000.0) {
+                ProductCreationResponse failureResponse = new ProductCreationResponse();
+                failureResponse.setStatus(ProductCreationResponse.StatusEnum.FAILURE);
+                return Mono.just(failureResponse);
+            }
             ProductDTO productDTO = new ProductDTO();
             productDTO.setUserId(request.getUserId());
             productDTO.setName(request.getName());

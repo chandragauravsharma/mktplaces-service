@@ -585,6 +585,7 @@ components:
           type: string
           enum:
             - created
+            - hold
             - booked
             - cancelled
             - refunded

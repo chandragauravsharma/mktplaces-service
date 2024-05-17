@@ -41,6 +41,8 @@ public class Booking {
   public enum StatusEnum {
     CREATED("created"),
     
+    HOLD("hold"),
+    
     BOOKED("booked"),
     
     CANCELLED("cancelled"),
