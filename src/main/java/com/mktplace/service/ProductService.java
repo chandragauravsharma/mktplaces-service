@@ -72,7 +72,7 @@ public class ProductService {
     }
 
     public Mono<Product> getProductById(Long productId) {
-        return productRepository.findById(Math.toIntExact(productId))
+        return productRepository.findById(productId)
                 .map(productDTO -> {
                     Product product = new Product();
                     product.setProductId(productDTO.getProductId());

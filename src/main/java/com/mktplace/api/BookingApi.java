@@ -5,6 +5,7 @@
  */
 package com.mktplace.api;
 
+import com.mktplace.model.Booking;
 import com.mktplace.model.BookingRequest;
 import com.mktplace.model.BookingResponse;
 import com.mktplace.model.CheckoutRequest;
@@ -105,6 +106,39 @@ public interface BookingApi {
         @Parameter(hidden = true) final ServerWebExchange exchange
     ) {
         return getDelegate().checkout(checkoutRequest, exchange);
+    }
+
+
+    /**
+     * GET /book/{bookingId} : Get a booking by Id
+     *
+     * @param bookingId ID of the booking to retrieve (required)
+     * @return booking details (status code 200)
+     *         or Booking not found (status code 404)
+     *         or Internal server error (status code 500)
+     */
+    @Operation(
+        operationId = "getBookingById",
+        summary = "Get a booking by Id",
+        tags = { "Booking" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "booking details", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Booking.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Booking not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/book/{bookingId}",
+        produces = { "application/json" }
+    )
+    default Mono<ResponseEntity<Booking>> getBookingById(
+        @Parameter(name = "bookingId", description = "ID of the booking to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("bookingId") Long bookingId,
+        @Parameter(hidden = true) final ServerWebExchange exchange
+    ) {
+        return getDelegate().getBookingById(bookingId, exchange);
     }
 
 }

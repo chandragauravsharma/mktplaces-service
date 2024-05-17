@@ -1,5 +1,6 @@
 package com.mktplace.api;
 
+import com.mktplace.model.Booking;
 import com.mktplace.model.BookingRequest;
 import com.mktplace.model.BookingResponse;
 import com.mktplace.model.CheckoutRequest;
@@ -73,6 +74,30 @@ public interface BookingApiDelegate {
             }
         }
         return result.then(checkoutRequest).then(Mono.empty());
+
+    }
+
+    /**
+     * GET /book/{bookingId} : Get a booking by Id
+     *
+     * @param bookingId ID of the booking to retrieve (required)
+     * @return booking details (status code 200)
+     *         or Booking not found (status code 404)
+     *         or Internal server error (status code 500)
+     * @see BookingApi#getBookingById
+     */
+    default Mono<ResponseEntity<Booking>> getBookingById(Long bookingId,
+        ServerWebExchange exchange) {
+        Mono<Void> result = Mono.empty();
+        exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
+        for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
+            if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                String exampleString = "{ \"booking_id\" : 0, \"createdAt\" : 7, \"payment_id\" : 2, \"product_id\" : 5, \"transaction_amount\" : 5.637376656633329, \"buyer_id\" : 6, \"seller_id\" : 1, \"status\" : \"created\", \"updatedAt\" : 9 }";
+                result = ApiUtil.getExampleResponse(exchange, mediaType, exampleString);
+                break;
+            }
+        }
+        return result.then(Mono.empty());
 
     }
 

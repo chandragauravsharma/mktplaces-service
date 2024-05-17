@@ -1,5 +1,6 @@
 package com.mktplace.api;
 
+import com.mktplace.model.Booking;
 import com.mktplace.model.BookingRequest;
 import com.mktplace.model.BookingResponse;
 import com.mktplace.model.CheckoutRequest;

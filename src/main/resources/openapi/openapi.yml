@@ -217,6 +217,32 @@ paths:
         '500':
           description: Internal server error
 
+  /book/{bookingId}:
+    get:
+      operationId: getBookingById
+      summary: Get a booking by Id
+      tags:
+        - Booking
+      parameters:
+        - in: path
+          name: bookingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the booking to retrieve
+      responses:
+        '200':
+          description: booking details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: Booking not found
+        '500':
+          description: Internal server error
+
   /pay:
     post:
       operationId: pay
