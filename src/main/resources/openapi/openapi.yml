@@ -1,0 +1,624 @@
+openapi: 3.0.0
+info:
+  title: MktplaceApp APIs
+  version: 1.0.0
+  description: APIs for the marketplace application for buying and selling gaming assets
+
+servers:
+  - url: http://localhost:8080/api/v1
+
+paths:
+  /users/{userId}:
+    get:
+      operationId: getUserById
+      summary: Get user details by Id
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the user to retrieve
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /users:
+    post:
+      operationId: createUser
+      summary: Create a new user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreationRequest'
+      responses:
+        '200':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreationResponse'
+        '500':
+          description: Internal server error
+
+  /users/{userId}/products:
+    get:
+      operationId: getAllProductsListedByUser
+      summary: Get all products listed by a user
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the user to retrieve product listings for
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Internal server error
+
+  /users/{userId}/bookings:
+    get:
+      operationId: getAllBookingsByUser
+      summary: Get all bookings done by a user / all products bought by a user
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the user to retrieve bookings for
+      responses:
+        '200':
+          description: Booking details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+        '500':
+          description: Internal server error
+
+  /products:
+    get:
+      operationId: getAllProducts
+      summary: Get all products
+      tags:
+        - Product
+      responses:
+        '200':
+          description: A list of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Internal server error
+
+    post:
+      operationId: createProduct
+      summary: Create a new product
+      tags:
+        - Product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreationRequest'
+      responses:
+        '200':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCreationResponse'
+        '500':
+          description: Internal server error
+
+  /products/{productId}:
+    get:
+      operationId: getProductById
+      summary: Get a product by Id
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the product to retrieve
+      responses:
+        '200':
+          description: product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+
+  /checkout:
+    post:
+      operationId: checkout
+      summary: Create a new booking with a unique id in CREATED state
+      tags:
+        - Booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+      responses:
+        '200':
+          description: checkout done and booking id generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutResponse'
+        '500':
+          description: Internal server error
+
+  /book:
+    post:
+      operationId: book
+      summary: Update booking to BOOKED state, put hold on product and wait for payment to be done
+      tags:
+        - Booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+      responses:
+        '200':
+          description: checkout done and booking id generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '500':
+          description: Internal server error
+
+  /book/{bookingId}:
+    get:
+      operationId: getBookingById
+      summary: Get a booking by Id
+      tags:
+        - Booking
+      parameters:
+        - in: path
+          name: bookingId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the booking to retrieve
+      responses:
+        '200':
+          description: booking details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: Booking not found
+        '500':
+          description: Internal server error
+
+  /pay:
+    post:
+      operationId: pay
+      summary: API for payment
+      tags:
+        - Payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: payment initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '500':
+          description: Internal server error
+
+  /paycallback:
+    post:
+      operationId: paycallback
+      summary: API for payment callback
+      tags:
+        - Payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCallbackRequest'
+      responses:
+        '200':
+          description: payment sttaus moved to success / failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentCallbackResponse'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    UserCreationRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 50
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+          maxLength: 20
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"
+      required:
+        - username
+        - email
+        - password
+
+    UserCreationResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        user:
+          $ref: '#/components/schemas/User'
+          description: The created user object
+
+    ProductCreationRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+        base_price:
+          type: number
+          format: double
+        quantity_available:
+          type: integer
+          format: int64
+      required:
+        - user_id
+        - name
+        - description
+        - base_price
+        - quantity_available
+
+    ProductCreationResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        product:
+          $ref: '#/components/schemas/Product'
+          description: The created product object
+
+    CheckoutRequest:
+      type: object
+      properties:
+        buyer_id:
+          type: integer
+          format: int64
+        seller_id:
+          type: integer
+          format: int64
+        product_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+      required:
+        - buyer_id
+        - seller_id
+        - product_id
+        - transaction_amount
+
+    CheckoutResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The created booking object
+
+    BookingRequest:
+      type: object
+      properties:
+        booking_id:
+          type: integer
+          format: int64
+        buyer_id:
+          type: integer
+          format: int64
+        seller_id:
+          type: integer
+          format: int64
+        product_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+      required:
+        - booking_id
+        - buyer_id
+        - seller_id
+        - product_id
+        - transaction_amount
+
+    BookingResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The created booking object
+
+    PaymentRequest:
+      type: object
+      properties:
+        booking_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+      required:
+        - booking_id
+        - transaction_amount
+
+    PaymentResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        payment:
+          $ref: '#/components/schemas/Payment'
+          description: The created payment object
+
+    PaymentCallbackRequest:
+      type: object
+      properties:
+        payment_id:
+          type: integer
+          format: int64
+        booking_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+        status:
+          type: string
+          enum:
+            - initiated
+            - success
+            - failed
+            - reversed
+            - refunded
+      required:
+        - payment_id
+        - booking_id
+        - transaction_amount
+        - status
+
+    PaymentCallbackResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        payment:
+          $ref: '#/components/schemas/Payment'
+          description: The created payment object with updated status
+
+
+    User:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int64
+        username:
+          type: string
+          minLength: 1  # Minimum length of username
+          maxLength: 50 # Maximum length of username
+        email:
+          type: string
+          format: email  # Format validation for email
+        password:
+          type: string
+          format: password
+          readOnly: true
+          minLength: 8   # Minimum length of password
+          maxLength: 20  # Maximum length of password
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$"  # Password pattern (at least one lowercase, one uppercase, one digit)
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
+        last_purchase_timestamp:
+          type: integer
+          format: int64
+
+    Product:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+        base_price:
+          type: number
+          format: double
+        quantity_available:
+          type: integer
+          format: int64
+        quantity_sold:
+          type: integer
+          format: int64
+        quantity_on_hold:
+          type: integer
+          format: int64
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
+
+    Booking:
+      type: object
+      properties:
+        booking_id:
+          type: integer
+          format: int64
+        buyer_id:
+          type: integer
+          format: int64
+        seller_id:
+          type: integer
+          format: int64
+        product_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+        payment_id:
+          type: integer
+          format: int64
+        status:
+          type: string
+          enum:
+            - created
+            - hold
+            - booked
+            - cancelled
+            - refunded
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
+
+    Payment:
+      type: object
+      properties:
+        payment_id:
+          type: integer
+          format: int64
+        booking_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+        status:
+          type: string
+          enum:
+            - initiated
+            - success
+            - failed
+            - reversed
+            - refunded
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
