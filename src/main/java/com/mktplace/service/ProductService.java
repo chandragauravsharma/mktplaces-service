@@ -35,7 +35,7 @@ public class ProductService {
                     .map(savedProduct -> {
                         ProductCreationResponse response = new ProductCreationResponse();
                         response.setStatus(ProductCreationResponse.StatusEnum.SUCCESS);
-                        response.setUser(objectMapper.convertValue(savedProduct, Product.class));
+                        response.setProduct(objectMapper.convertValue(savedProduct, Product.class));
                         return response;
                     });
         });
@@ -56,7 +56,7 @@ public class ProductService {
                 });
     }
 
-    public Flux<Product> getAllProductsByUserId(String userId) {
+    public Flux<Product> getAllProductsByUserId(Long userId) {
         return productRepository.findByUserId(userId)
                 .map(productDTO -> {
                     Product product = new Product();

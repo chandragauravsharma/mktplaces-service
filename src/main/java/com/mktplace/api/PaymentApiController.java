@@ -1,10 +1,9 @@
 package com.mktplace.api;
 
-import com.mktplace.model.Booking;
-import com.mktplace.model.Product;
-import com.mktplace.model.User;
-import com.mktplace.model.UserCreationRequest;
-import com.mktplace.model.UserCreationResponse;
+import com.mktplace.model.PaymentCallbackRequest;
+import com.mktplace.model.PaymentCallbackResponse;
+import com.mktplace.model.PaymentRequest;
+import com.mktplace.model.PaymentResponse;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +31,16 @@ import jakarta.annotation.Generated;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Controller
 @RequestMapping("${openapi.mktplaceAppAPIs.base-path:/api/v1}")
-public class UserApiController implements UserApi {
+public class PaymentApiController implements PaymentApi {
 
-    private final UserApiDelegate delegate;
+    private final PaymentApiDelegate delegate;
 
-    public UserApiController(@Autowired(required = false) UserApiDelegate delegate) {
-        this.delegate = Optional.ofNullable(delegate).orElse(new UserApiDelegate() {});
+    public PaymentApiController(@Autowired(required = false) PaymentApiDelegate delegate) {
+        this.delegate = Optional.ofNullable(delegate).orElse(new PaymentApiDelegate() {});
     }
 
     @Override
-    public UserApiDelegate getDelegate() {
+    public PaymentApiDelegate getDelegate() {
         return delegate;
     }
 

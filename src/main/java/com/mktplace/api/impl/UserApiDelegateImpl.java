@@ -20,7 +20,7 @@ public class UserApiDelegateImpl implements UserApiDelegate {
     private UserService userService;
 
     @Override
-    public Mono<ResponseEntity<User>> getUserById(String userId, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<User>> getUserById(Long userId, ServerWebExchange exchange) {
         return userService.getUserById(userId)
                 .map(user -> ResponseEntity.status(HttpStatus.OK).body(user))
                 .defaultIfEmpty(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
@@ -34,7 +34,7 @@ public class UserApiDelegateImpl implements UserApiDelegate {
     }
 
     @Override
-    public Mono<ResponseEntity<Flux<Product>>> getAllProductsListedByUser(String userId, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Flux<Product>>> getAllProductsListedByUser(Long userId, ServerWebExchange exchange) {
         return userService.getAllProductsListedByUser(userId)
                 .collectList()
                 .map(products -> ResponseEntity.status(HttpStatus.OK).body(Flux.fromIterable(products)))

@@ -5,6 +5,7 @@
  */
 package com.mktplace.api;
 
+import com.mktplace.model.Booking;
 import com.mktplace.model.Product;
 import com.mktplace.model.User;
 import com.mktplace.model.UserCreationRequest;
@@ -77,6 +78,37 @@ public interface UserApi {
 
 
     /**
+     * GET /users/{userId}/bookings : Get all bookings done by a user / all products bought by a user
+     *
+     * @param userId ID of the user to retrieve bookings for (required)
+     * @return Booking details (status code 200)
+     *         or Internal server error (status code 500)
+     */
+    @Operation(
+        operationId = "getAllBookingsByUser",
+        summary = "Get all bookings done by a user / all products bought by a user",
+        tags = { "User" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Booking details", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Booking.class)))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/users/{userId}/bookings",
+        produces = { "application/json" }
+    )
+    default Mono<ResponseEntity<Flux<Booking>>> getAllBookingsByUser(
+        @Parameter(name = "userId", description = "ID of the user to retrieve bookings for", required = true, in = ParameterIn.PATH) @PathVariable("userId") Long userId,
+        @Parameter(hidden = true) final ServerWebExchange exchange
+    ) {
+        return getDelegate().getAllBookingsByUser(userId, exchange);
+    }
+
+
+    /**
      * GET /users/{userId}/products : Get all products listed by a user
      *
      * @param userId ID of the user to retrieve product listings for (required)
@@ -100,7 +132,7 @@ public interface UserApi {
         produces = { "application/json" }
     )
     default Mono<ResponseEntity<Flux<Product>>> getAllProductsListedByUser(
-        @Parameter(name = "userId", description = "ID of the user to retrieve product listings for", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId,
+        @Parameter(name = "userId", description = "ID of the user to retrieve product listings for", required = true, in = ParameterIn.PATH) @PathVariable("userId") Long userId,
         @Parameter(hidden = true) final ServerWebExchange exchange
     ) {
         return getDelegate().getAllProductsListedByUser(userId, exchange);
@@ -133,7 +165,7 @@ public interface UserApi {
         produces = { "application/json" }
     )
     default Mono<ResponseEntity<User>> getUserById(
-        @Parameter(name = "userId", description = "ID of the user to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("userId") String userId,
+        @Parameter(name = "userId", description = "ID of the user to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("userId") Long userId,
         @Parameter(hidden = true) final ServerWebExchange exchange
     ) {
         return getDelegate().getUserById(userId, exchange);

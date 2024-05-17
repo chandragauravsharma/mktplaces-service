@@ -19,7 +19,8 @@ paths:
           name: userId
           required: true
           schema:
-            type: String
+            type: integer
+            format: int64
           description: ID of the user to retrieve
       responses:
         '200':
@@ -66,7 +67,8 @@ paths:
           name: userId
           required: true
           schema:
-            type: String
+            type: integer
+            format: int64
           description: ID of the user to retrieve product listings for
       responses:
         '200':
@@ -77,6 +79,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Product'
+        '500':
+          description: Internal server error
+
+  /users/{userId}/bookings:
+    get:
+      operationId: getAllBookingsByUser
+      summary: Get all bookings done by a user / all products bought by a user
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: ID of the user to retrieve bookings for
+      responses:
+        '200':
+          description: Booking details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
         '500':
           description: Internal server error
 
@@ -145,34 +173,93 @@ paths:
         '500':
           description: Internal server error
 
-  /transactions:
-    get:
-      summary: Get all transactions
-      responses:
-        '200':
-          description: A list of transactions
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Transaction'
-
+  /checkout:
     post:
-      summary: Create a new transaction
+      operationId: checkout
+      summary: Create a new booking with a unique id in CREATED state
+      tags:
+        - Booking
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Transaction'
+              $ref: '#/components/schemas/CheckoutRequest'
       responses:
-        '201':
-          description: Transaction created successfully
+        '200':
+          description: checkout done and booking id generated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transaction'
+                $ref: '#/components/schemas/CheckoutResponse'
+        '500':
+          description: Internal server error
+
+  /book:
+    post:
+      operationId: book
+      summary: Update booking to BOOKED state, put hold on product and wait for payment to be done
+      tags:
+        - Booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+      responses:
+        '200':
+          description: checkout done and booking id generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '500':
+          description: Internal server error
+
+  /pay:
+    post:
+      operationId: pay
+      summary: API for payment
+      tags:
+        - Payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: payment initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '500':
+          description: Internal server error
+
+  /paycallback:
+    post:
+      operationId: paycallback
+      summary: API for payment callback
+      tags:
+        - Payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCallbackRequest'
+      responses:
+        '200':
+          description: payment sttaus moved to success / failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentCallbackResponse'
+        '500':
+          description: Internal server error
 
 components:
   schemas:
@@ -212,9 +299,8 @@ components:
       type: object
       properties:
         user_id:
-          type: string
-          minLength: 1
-          maxLength: 50
+          type: integer
+          format: int64
         name:
           type: string
           minLength: 1
@@ -244,17 +330,150 @@ components:
           enum:
             - success
             - failure
-        user:
+        product:
           $ref: '#/components/schemas/Product'
           description: The created product object
+
+    CheckoutRequest:
+      type: object
+      properties:
+        buyer_id:
+          type: integer
+          format: int64
+        seller_id:
+          type: integer
+          format: int64
+        product_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+      required:
+        - buyer_id
+        - seller_id
+        - product_id
+        - transaction_amount
+
+    CheckoutResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The created booking object
+
+    BookingRequest:
+      type: object
+      properties:
+        booking_id:
+          type: integer
+          format: int64
+        buyer_id:
+          type: integer
+          format: int64
+        seller_id:
+          type: integer
+          format: int64
+        product_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+      required:
+        - booking_id
+        - buyer_id
+        - seller_id
+        - product_id
+        - transaction_amount
+
+    BookingResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        booking:
+          $ref: '#/components/schemas/Booking'
+          description: The created booking object
+
+    PaymentRequest:
+      type: object
+      properties:
+        booking_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+      required:
+        - booking_id
+        - transaction_amount
+
+    PaymentResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        payment:
+          $ref: '#/components/schemas/Payment'
+          description: The created payment object
+
+    PaymentCallbackRequest:
+      type: object
+      properties:
+        payment_id:
+          type: integer
+          format: int64
+        booking_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+        status:
+          type: string
+          enum:
+            - initiated
+            - success
+            - failed
+            - reversed
+            - refunded
+      required:
+        - payment_id
+        - booking_id
+        - transaction_amount
+        - status
+
+    PaymentCallbackResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - failure
+        payment:
+          $ref: '#/components/schemas/Payment'
+          description: The created payment object with updated status
+
 
     User:
       type: object
       properties:
-        id:
-          type: String
-          minLength: 1
-          maxLength: 50
+        user_id:
+          type: integer
+          format: int64
         username:
           type: string
           minLength: 1  # Minimum length of username
@@ -275,6 +494,9 @@ components:
         updatedAt:
           type: integer
           format: int64
+        last_purchase_timestamp:
+          type: integer
+          format: int64
 
     Product:
       type: object
@@ -283,9 +505,8 @@ components:
           type: integer
           format: int64
         user_id:
-          type: string
-          minLength: 1
-          maxLength: 50
+          type: integer
+          format: int64
         name:
           type: string
           minLength: 1
@@ -300,6 +521,12 @@ components:
         quantity_available:
           type: integer
           format: int64
+        quantity_sold:
+          type: integer
+          format: int64
+        quantity_on_hold:
+          type: integer
+          format: int64
         createdAt:
           type: integer
           format: int64
@@ -307,21 +534,64 @@ components:
           type: integer
           format: int64
 
-    Transaction:
+    Booking:
       type: object
       properties:
-        id:
+        booking_id:
           type: integer
           format: int64
-        buyerId:
+        buyer_id:
           type: integer
           format: int64
-        itemId:
+        seller_id:
           type: integer
           format: int64
-        price:
+        product_id:
+          type: integer
+          format: int64
+        transaction_amount:
           type: number
           format: double
-        transactionDate:
+        payment_id:
+          type: integer
+          format: int64
+        status:
+          type: string
+          enum:
+            - created
+            - booked
+            - cancelled
+            - refunded
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
+
+    Payment:
+      type: object
+      properties:
+        payment_id:
+          type: integer
+          format: int64
+        booking_id:
+          type: integer
+          format: int64
+        transaction_amount:
+          type: number
+          format: double
+        status:
+          type: string
+          enum:
+            - initiated
+            - success
+            - failed
+            - reversed
+            - refunded
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
           type: integer
           format: int64

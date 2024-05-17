@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 public class ProductCreationRequest {
 
-  private String userId;
+  private Long userId;
 
   private String name;
 
@@ -34,7 +34,7 @@ public class ProductCreationRequest {
 
   /**
    * Default constructor
-   * @deprecated Use {@link ProductCreationRequest#ProductCreationRequest(String, String, String, Double, Long)}
+   * @deprecated Use {@link ProductCreationRequest#ProductCreationRequest(Long, String, String, Double, Long)}
    */
   @Deprecated
   public ProductCreationRequest() {
@@ -44,7 +44,7 @@ public class ProductCreationRequest {
   /**
    * Constructor with only required parameters
    */
-  public ProductCreationRequest(String userId, String name, String description, Double basePrice, Long quantityAvailable) {
+  public ProductCreationRequest(Long userId, String name, String description, Double basePrice, Long quantityAvailable) {
     this.userId = userId;
     this.name = name;
     this.description = description;
@@ -52,7 +52,7 @@ public class ProductCreationRequest {
     this.quantityAvailable = quantityAvailable;
   }
 
-  public ProductCreationRequest userId(String userId) {
+  public ProductCreationRequest userId(Long userId) {
     this.userId = userId;
     return this;
   }
@@ -61,14 +61,14 @@ public class ProductCreationRequest {
    * Get userId
    * @return userId
   */
-  @NotNull @Size(min = 1, max = 50) 
+  @NotNull 
   @Schema(name = "user_id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("user_id")
-  public String getUserId() {
+  public Long getUserId() {
     return userId;
   }
 
-  public void setUserId(String userId) {
+  public void setUserId(Long userId) {
     this.userId = userId;
   }
 

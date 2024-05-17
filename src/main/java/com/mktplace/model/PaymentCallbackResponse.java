@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.mktplace.model.Product;
+import com.mktplace.model.Payment;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -18,11 +18,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * ProductCreationResponse
+ * PaymentCallbackResponse
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
-public class ProductCreationResponse {
+public class PaymentCallbackResponse {
 
   /**
    * Gets or Sets status
@@ -61,9 +61,9 @@ public class ProductCreationResponse {
 
   private StatusEnum status;
 
-  private Product product;
+  private Payment payment;
 
-  public ProductCreationResponse status(StatusEnum status) {
+  public PaymentCallbackResponse status(StatusEnum status) {
     this.status = status;
     return this;
   }
@@ -83,24 +83,24 @@ public class ProductCreationResponse {
     this.status = status;
   }
 
-  public ProductCreationResponse product(Product product) {
-    this.product = product;
+  public PaymentCallbackResponse payment(Payment payment) {
+    this.payment = payment;
     return this;
   }
 
   /**
-   * Get product
-   * @return product
+   * Get payment
+   * @return payment
   */
   @Valid 
-  @Schema(name = "product", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("product")
-  public Product getProduct() {
-    return product;
+  @Schema(name = "payment", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("payment")
+  public Payment getPayment() {
+    return payment;
   }
 
-  public void setProduct(Product product) {
-    this.product = product;
+  public void setPayment(Payment payment) {
+    this.payment = payment;
   }
 
   @Override
@@ -111,22 +111,22 @@ public class ProductCreationResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ProductCreationResponse productCreationResponse = (ProductCreationResponse) o;
-    return Objects.equals(this.status, productCreationResponse.status) &&
-        Objects.equals(this.product, productCreationResponse.product);
+    PaymentCallbackResponse paymentCallbackResponse = (PaymentCallbackResponse) o;
+    return Objects.equals(this.status, paymentCallbackResponse.status) &&
+        Objects.equals(this.payment, paymentCallbackResponse.payment);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(status, product);
+    return Objects.hash(status, payment);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ProductCreationResponse {\n");
+    sb.append("class PaymentCallbackResponse {\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    product: ").append(toIndentedString(product)).append("\n");
+    sb.append("    payment: ").append(toIndentedString(payment)).append("\n");
     sb.append("}");
     return sb.toString();
   }

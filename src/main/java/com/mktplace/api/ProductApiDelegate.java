@@ -43,7 +43,7 @@ public interface ProductApiDelegate {
         exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
         for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
             if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                String exampleString = "{ \"user\" : { \"createdAt\" : 5, \"user_id\" : \"user_id\", \"product_id\" : 0, \"name\" : \"name\", \"base_price\" : 6.027456183070403, \"description\" : \"description\", \"quantity_available\" : 1, \"updatedAt\" : 5 }, \"status\" : \"success\" }";
+                String exampleString = "{ \"product\" : { \"quantity_sold\" : 5, \"createdAt\" : 7, \"user_id\" : 6, \"product_id\" : 0, \"name\" : \"name\", \"base_price\" : 1.4658129805029452, \"description\" : \"description\", \"quantity_on_hold\" : 2, \"quantity_available\" : 5, \"updatedAt\" : 9 }, \"status\" : \"success\" }";
                 result = ApiUtil.getExampleResponse(exchange, mediaType, exampleString);
                 break;
             }
@@ -64,7 +64,7 @@ public interface ProductApiDelegate {
         exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
         for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
             if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                String exampleString = "[ { \"createdAt\" : 5, \"user_id\" : \"user_id\", \"product_id\" : 0, \"name\" : \"name\", \"base_price\" : 6.027456183070403, \"description\" : \"description\", \"quantity_available\" : 1, \"updatedAt\" : 5 }, { \"createdAt\" : 5, \"user_id\" : \"user_id\", \"product_id\" : 0, \"name\" : \"name\", \"base_price\" : 6.027456183070403, \"description\" : \"description\", \"quantity_available\" : 1, \"updatedAt\" : 5 } ]";
+                String exampleString = "[ { \"quantity_sold\" : 5, \"createdAt\" : 7, \"user_id\" : 6, \"product_id\" : 0, \"name\" : \"name\", \"base_price\" : 1.4658129805029452, \"description\" : \"description\", \"quantity_on_hold\" : 2, \"quantity_available\" : 5, \"updatedAt\" : 9 }, { \"quantity_sold\" : 5, \"createdAt\" : 7, \"user_id\" : 6, \"product_id\" : 0, \"name\" : \"name\", \"base_price\" : 1.4658129805029452, \"description\" : \"description\", \"quantity_on_hold\" : 2, \"quantity_available\" : 5, \"updatedAt\" : 9 } ]";
                 result = ApiUtil.getExampleResponse(exchange, mediaType, exampleString);
                 break;
             }
@@ -88,7 +88,7 @@ public interface ProductApiDelegate {
         exchange.getResponse().setStatusCode(HttpStatus.NOT_IMPLEMENTED);
         for (MediaType mediaType : exchange.getRequest().getHeaders().getAccept()) {
             if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                String exampleString = "{ \"createdAt\" : 5, \"user_id\" : \"user_id\", \"product_id\" : 0, \"name\" : \"name\", \"base_price\" : 6.027456183070403, \"description\" : \"description\", \"quantity_available\" : 1, \"updatedAt\" : 5 }";
+                String exampleString = "{ \"quantity_sold\" : 5, \"createdAt\" : 7, \"user_id\" : 6, \"product_id\" : 0, \"name\" : \"name\", \"base_price\" : 1.4658129805029452, \"description\" : \"description\", \"quantity_on_hold\" : 2, \"quantity_available\" : 5, \"updatedAt\" : 9 }";
                 result = ApiUtil.getExampleResponse(exchange, mediaType, exampleString);
                 break;
             }

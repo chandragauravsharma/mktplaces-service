@@ -32,7 +32,6 @@ public class UserService {
     public Mono<UserCreationResponse> createUser(Mono<UserCreationRequest> userCreationRequest) {
         return userCreationRequest.flatMap(request -> {
             UserDTO user = new UserDTO();
-            user.setId(CommonUtil.generateNewUserId());
             user.setUsername(request.getUsername());
             user.setEmail(request.getEmail());
             user.setPassword(request.getPassword());
@@ -42,23 +41,24 @@ public class UserService {
                         UserCreationResponse response = new UserCreationResponse();
                         response.setStatus(UserCreationResponse.StatusEnum.SUCCESS);
                         response.setUser(objectMapper.convertValue(savedUser, User.class));
+                        response.getUser().setPassword(null);
                         return response;
                     });
         });
     }
 
-    public Mono<User> getUserById(String userId) {
+    public Mono<User> getUserById(Long userId) {
         return userRepository.findById(userId)
                 .map(r -> {
                     User user = new User();
-                    user.setId(r.getId());
+                    user.setUserId(r.getUserId());
                     user.setUsername(r.getUsername());
                     user.setEmail(r.getEmail());
                     return user;
                 });
     }
 
-    public Flux<Product> getAllProductsListedByUser(String userId) {
+    public Flux<Product> getAllProductsListedByUser(Long userId) {
         return productService.getAllProductsByUserId(userId);
     }
 }

@@ -7,7 +7,7 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface ProductRepository extends R2dbcRepository<ProductDTO, Integer> {
-    Flux<ProductDTO> findByUserId(String userId);
+    Flux<ProductDTO> findByUserId(Long userId);
 }
 
 

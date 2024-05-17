@@ -24,7 +24,7 @@ public class Product {
 
   private Long productId;
 
-  private String userId;
+  private Long userId;
 
   private String name;
 
@@ -33,6 +33,10 @@ public class Product {
   private Double basePrice;
 
   private Long quantityAvailable;
+
+  private Long quantitySold;
+
+  private Long quantityOnHold;
 
   private Long createdAt;
 
@@ -58,7 +62,7 @@ public class Product {
     this.productId = productId;
   }
 
-  public Product userId(String userId) {
+  public Product userId(Long userId) {
     this.userId = userId;
     return this;
   }
@@ -67,14 +71,14 @@ public class Product {
    * Get userId
    * @return userId
   */
-  @Size(min = 1, max = 50) 
+  
   @Schema(name = "user_id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("user_id")
-  public String getUserId() {
+  public Long getUserId() {
     return userId;
   }
 
-  public void setUserId(String userId) {
+  public void setUserId(Long userId) {
     this.userId = userId;
   }
 
@@ -158,6 +162,46 @@ public class Product {
     this.quantityAvailable = quantityAvailable;
   }
 
+  public Product quantitySold(Long quantitySold) {
+    this.quantitySold = quantitySold;
+    return this;
+  }
+
+  /**
+   * Get quantitySold
+   * @return quantitySold
+  */
+  
+  @Schema(name = "quantity_sold", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("quantity_sold")
+  public Long getQuantitySold() {
+    return quantitySold;
+  }
+
+  public void setQuantitySold(Long quantitySold) {
+    this.quantitySold = quantitySold;
+  }
+
+  public Product quantityOnHold(Long quantityOnHold) {
+    this.quantityOnHold = quantityOnHold;
+    return this;
+  }
+
+  /**
+   * Get quantityOnHold
+   * @return quantityOnHold
+  */
+  
+  @Schema(name = "quantity_on_hold", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("quantity_on_hold")
+  public Long getQuantityOnHold() {
+    return quantityOnHold;
+  }
+
+  public void setQuantityOnHold(Long quantityOnHold) {
+    this.quantityOnHold = quantityOnHold;
+  }
+
   public Product createdAt(Long createdAt) {
     this.createdAt = createdAt;
     return this;
@@ -213,13 +257,15 @@ public class Product {
         Objects.equals(this.description, product.description) &&
         Objects.equals(this.basePrice, product.basePrice) &&
         Objects.equals(this.quantityAvailable, product.quantityAvailable) &&
+        Objects.equals(this.quantitySold, product.quantitySold) &&
+        Objects.equals(this.quantityOnHold, product.quantityOnHold) &&
         Objects.equals(this.createdAt, product.createdAt) &&
         Objects.equals(this.updatedAt, product.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(productId, userId, name, description, basePrice, quantityAvailable, createdAt, updatedAt);
+    return Objects.hash(productId, userId, name, description, basePrice, quantityAvailable, quantitySold, quantityOnHold, createdAt, updatedAt);
   }
 
   @Override
@@ -232,6 +278,8 @@ public class Product {
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    basePrice: ").append(toIndentedString(basePrice)).append("\n");
     sb.append("    quantityAvailable: ").append(toIndentedString(quantityAvailable)).append("\n");
+    sb.append("    quantitySold: ").append(toIndentedString(quantitySold)).append("\n");
+    sb.append("    quantityOnHold: ").append(toIndentedString(quantityOnHold)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");

@@ -1,14 +1,22 @@
 package com.mktplace.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Generated;
-import jakarta.validation.constraints.Size;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
-
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import java.util.*;
+import jakarta.annotation.Generated;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * Product
@@ -21,7 +29,7 @@ public class ProductDTO {
   @Id
   private Long productId;
 
-  private String userId;
+  private Long userId;
 
   private String name;
 
@@ -30,6 +38,10 @@ public class ProductDTO {
   private Double basePrice;
 
   private Long quantityAvailable;
+
+  private Long quantitySold;
+
+  private Long quantityOnHold;
 
   private LocalDateTime createdAt;
 
@@ -43,8 +55,8 @@ public class ProductDTO {
   /**
    * Get productId
    * @return productId
-  */
-  
+   */
+
   @Schema(name = "product_id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("product_id")
   public Long getProductId() {
@@ -55,7 +67,7 @@ public class ProductDTO {
     this.productId = productId;
   }
 
-  public ProductDTO userId(String userId) {
+  public ProductDTO userId(Long userId) {
     this.userId = userId;
     return this;
   }
@@ -63,15 +75,15 @@ public class ProductDTO {
   /**
    * Get userId
    * @return userId
-  */
-  @Size(min = 1, max = 50) 
+   */
+  @Size(min = 1, max = 50)
   @Schema(name = "user_id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("user_id")
-  public String getUserId() {
+  public Long getUserId() {
     return userId;
   }
 
-  public void setUserId(String userId) {
+  public void setUserId(Long userId) {
     this.userId = userId;
   }
 
@@ -83,8 +95,8 @@ public class ProductDTO {
   /**
    * Get name
    * @return name
-  */
-  @Size(min = 1, max = 100) 
+   */
+  @Size(min = 1, max = 100)
   @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -103,8 +115,8 @@ public class ProductDTO {
   /**
    * Get description
    * @return description
-  */
-  @Size(min = 1, max = 500) 
+   */
+  @Size(min = 1, max = 500)
   @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public String getDescription() {
@@ -123,8 +135,8 @@ public class ProductDTO {
   /**
    * Get basePrice
    * @return basePrice
-  */
-  
+   */
+
   @Schema(name = "base_price", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("base_price")
   public Double getBasePrice() {
@@ -143,8 +155,8 @@ public class ProductDTO {
   /**
    * Get quantityAvailable
    * @return quantityAvailable
-  */
-  
+   */
+
   @Schema(name = "quantity_available", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("quantity_available")
   public Long getQuantityAvailable() {
@@ -155,6 +167,46 @@ public class ProductDTO {
     this.quantityAvailable = quantityAvailable;
   }
 
+  public ProductDTO quantitySold(Long quantitySold) {
+    this.quantitySold = quantitySold;
+    return this;
+  }
+
+  /**
+   * Get quantitySold
+   * @return quantitySold
+   */
+
+  @Schema(name = "quantity_sold", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("quantity_sold")
+  public Long getQuantitySold() {
+    return quantitySold;
+  }
+
+  public void setQuantitySold(Long quantitySold) {
+    this.quantitySold = quantitySold;
+  }
+
+  public ProductDTO quantityOnHold(Long quantityOnHold) {
+    this.quantityOnHold = quantityOnHold;
+    return this;
+  }
+
+  /**
+   * Get quantityOnHold
+   * @return quantityOnHold
+   */
+
+  @Schema(name = "quantity_on_hold", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("quantity_on_hold")
+  public Long getQuantityOnHold() {
+    return quantityOnHold;
+  }
+
+  public void setQuantityOnHold(Long quantityOnHold) {
+    this.quantityOnHold = quantityOnHold;
+  }
+
   public ProductDTO createdAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
@@ -163,8 +215,8 @@ public class ProductDTO {
   /**
    * Get createdAt
    * @return createdAt
-  */
-  
+   */
+
   @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("createdAt")
   public LocalDateTime getCreatedAt() {
@@ -183,8 +235,8 @@ public class ProductDTO {
   /**
    * Get updatedAt
    * @return updatedAt
-  */
-  
+   */
+
   @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("updatedAt")
   public LocalDateTime getUpdatedAt() {
@@ -205,18 +257,20 @@ public class ProductDTO {
     }
     ProductDTO product = (ProductDTO) o;
     return Objects.equals(this.productId, product.productId) &&
-        Objects.equals(this.userId, product.userId) &&
-        Objects.equals(this.name, product.name) &&
-        Objects.equals(this.description, product.description) &&
-        Objects.equals(this.basePrice, product.basePrice) &&
-        Objects.equals(this.quantityAvailable, product.quantityAvailable) &&
-        Objects.equals(this.createdAt, product.createdAt) &&
-        Objects.equals(this.updatedAt, product.updatedAt);
+            Objects.equals(this.userId, product.userId) &&
+            Objects.equals(this.name, product.name) &&
+            Objects.equals(this.description, product.description) &&
+            Objects.equals(this.basePrice, product.basePrice) &&
+            Objects.equals(this.quantityAvailable, product.quantityAvailable) &&
+            Objects.equals(this.quantitySold, product.quantitySold) &&
+            Objects.equals(this.quantityOnHold, product.quantityOnHold) &&
+            Objects.equals(this.createdAt, product.createdAt) &&
+            Objects.equals(this.updatedAt, product.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(productId, userId, name, description, basePrice, quantityAvailable, createdAt, updatedAt);
+    return Objects.hash(productId, userId, name, description, basePrice, quantityAvailable, quantitySold, quantityOnHold, createdAt, updatedAt);
   }
 
   @Override
@@ -229,6 +283,8 @@ public class ProductDTO {
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    basePrice: ").append(toIndentedString(basePrice)).append("\n");
     sb.append("    quantityAvailable: ").append(toIndentedString(quantityAvailable)).append("\n");
+    sb.append("    quantitySold: ").append(toIndentedString(quantitySold)).append("\n");
+    sb.append("    quantityOnHold: ").append(toIndentedString(quantityOnHold)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");

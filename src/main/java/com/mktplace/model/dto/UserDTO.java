@@ -3,16 +3,12 @@ package com.mktplace.model.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Generated;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.Objects;
 
 /**
@@ -21,48 +17,41 @@ import java.util.Objects;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 @Table(name = "users")
-public class UserDTO implements Persistable<String> {
-  @Id
-  private String id;
+public class UserDTO {
 
-  @Unique
-  @NotNull
+  @Id
+  private Long userId;
+
   private String username;
 
-  @Unique
-  @NotNull
   private String email;
 
-  @NotNull
   private String password;
 
   private LocalDateTime createdAt;
 
   private LocalDateTime updatedAt;
 
-  public UserDTO id(String id) {
-    this.id = id;
+  private LocalDateTime lastPurchaseTimestamp;
+
+  public UserDTO userId(Long userId) {
+    this.userId = userId;
     return this;
   }
 
   /**
-   * Get id
-   * @return id
+   * Get userId
+   * @return userId
   */
   
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("id")
-  public String getId() {
-    return id;
+  @Schema(name = "user_id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("user_id")
+  public Long getUserId() {
+    return userId;
   }
 
-  @Override
-  public boolean isNew() {
-    return true;
-  }
-
-  public void setId(String id) {
-    this.id = id;
+  public void setUserId(Long userId) {
+    this.userId = userId;
   }
 
   public UserDTO username(String username) {
@@ -165,6 +154,26 @@ public class UserDTO implements Persistable<String> {
     this.updatedAt = updatedAt;
   }
 
+  public UserDTO lastPurchaseTimestamp(LocalDateTime lastPurchaseTimestamp) {
+    this.lastPurchaseTimestamp = lastPurchaseTimestamp;
+    return this;
+  }
+
+  /**
+   * Get lastPurchaseTimestamp
+   * @return lastPurchaseTimestamp
+  */
+  
+  @Schema(name = "last_purchase_timestamp", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("last_purchase_timestamp")
+  public LocalDateTime getLastPurchaseTimestamp() {
+    return lastPurchaseTimestamp;
+  }
+
+  public void setLastPurchaseTimestamp(LocalDateTime lastPurchaseTimestamp) {
+    this.lastPurchaseTimestamp = lastPurchaseTimestamp;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -174,29 +183,31 @@ public class UserDTO implements Persistable<String> {
       return false;
     }
     UserDTO user = (UserDTO) o;
-    return Objects.equals(this.id, user.id) &&
+    return Objects.equals(this.userId, user.userId) &&
         Objects.equals(this.username, user.username) &&
         Objects.equals(this.email, user.email) &&
         Objects.equals(this.password, user.password) &&
         Objects.equals(this.createdAt, user.createdAt) &&
-        Objects.equals(this.updatedAt, user.updatedAt);
+        Objects.equals(this.updatedAt, user.updatedAt) &&
+        Objects.equals(this.lastPurchaseTimestamp, user.lastPurchaseTimestamp);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, email, password, createdAt, updatedAt);
+    return Objects.hash(userId, username, email, password, createdAt, updatedAt, lastPurchaseTimestamp);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class User {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
+    sb.append("    lastPurchaseTimestamp: ").append(toIndentedString(lastPurchaseTimestamp)).append("\n");
     sb.append("}");
     return sb.toString();
   }

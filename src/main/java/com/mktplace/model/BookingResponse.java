@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.mktplace.model.Product;
+import com.mktplace.model.Booking;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -18,11 +18,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * ProductCreationResponse
+ * BookingResponse
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
-public class ProductCreationResponse {
+public class BookingResponse {
 
   /**
    * Gets or Sets status
@@ -61,9 +61,9 @@ public class ProductCreationResponse {
 
   private StatusEnum status;
 
-  private Product product;
+  private Booking booking;
 
-  public ProductCreationResponse status(StatusEnum status) {
+  public BookingResponse status(StatusEnum status) {
     this.status = status;
     return this;
   }
@@ -83,24 +83,24 @@ public class ProductCreationResponse {
     this.status = status;
   }
 
-  public ProductCreationResponse product(Product product) {
-    this.product = product;
+  public BookingResponse booking(Booking booking) {
+    this.booking = booking;
     return this;
   }
 
   /**
-   * Get product
-   * @return product
+   * Get booking
+   * @return booking
   */
   @Valid 
-  @Schema(name = "product", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("product")
-  public Product getProduct() {
-    return product;
+  @Schema(name = "booking", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("booking")
+  public Booking getBooking() {
+    return booking;
   }
 
-  public void setProduct(Product product) {
-    this.product = product;
+  public void setBooking(Booking booking) {
+    this.booking = booking;
   }
 
   @Override
@@ -111,22 +111,22 @@ public class ProductCreationResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ProductCreationResponse productCreationResponse = (ProductCreationResponse) o;
-    return Objects.equals(this.status, productCreationResponse.status) &&
-        Objects.equals(this.product, productCreationResponse.product);
+    BookingResponse bookingResponse = (BookingResponse) o;
+    return Objects.equals(this.status, bookingResponse.status) &&
+        Objects.equals(this.booking, bookingResponse.booking);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(status, product);
+    return Objects.hash(status, booking);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ProductCreationResponse {\n");
+    sb.append("class BookingResponse {\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    product: ").append(toIndentedString(product)).append("\n");
+    sb.append("    booking: ").append(toIndentedString(booking)).append("\n");
     sb.append("}");
     return sb.toString();
   }

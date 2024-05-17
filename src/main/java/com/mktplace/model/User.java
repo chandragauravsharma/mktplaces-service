@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen")
 public class User {
 
-  private String id = null;
+  private Long userId;
 
   private String username;
 
@@ -34,24 +34,26 @@ public class User {
 
   private Long updatedAt;
 
-  public User id(String id) {
-    this.id = id;
+  private Long lastPurchaseTimestamp;
+
+  public User userId(Long userId) {
+    this.userId = userId;
     return this;
   }
 
   /**
-   * Get id
-   * @return id
+   * Get userId
+   * @return userId
   */
   
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("id")
-  public String getId() {
-    return id;
+  @Schema(name = "user_id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("user_id")
+  public Long getUserId() {
+    return userId;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setUserId(Long userId) {
+    this.userId = userId;
   }
 
   public User username(String username) {
@@ -154,6 +156,26 @@ public class User {
     this.updatedAt = updatedAt;
   }
 
+  public User lastPurchaseTimestamp(Long lastPurchaseTimestamp) {
+    this.lastPurchaseTimestamp = lastPurchaseTimestamp;
+    return this;
+  }
+
+  /**
+   * Get lastPurchaseTimestamp
+   * @return lastPurchaseTimestamp
+  */
+  
+  @Schema(name = "last_purchase_timestamp", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("last_purchase_timestamp")
+  public Long getLastPurchaseTimestamp() {
+    return lastPurchaseTimestamp;
+  }
+
+  public void setLastPurchaseTimestamp(Long lastPurchaseTimestamp) {
+    this.lastPurchaseTimestamp = lastPurchaseTimestamp;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -163,29 +185,31 @@ public class User {
       return false;
     }
     User user = (User) o;
-    return Objects.equals(this.id, user.id) &&
+    return Objects.equals(this.userId, user.userId) &&
         Objects.equals(this.username, user.username) &&
         Objects.equals(this.email, user.email) &&
         Objects.equals(this.password, user.password) &&
         Objects.equals(this.createdAt, user.createdAt) &&
-        Objects.equals(this.updatedAt, user.updatedAt);
+        Objects.equals(this.updatedAt, user.updatedAt) &&
+        Objects.equals(this.lastPurchaseTimestamp, user.lastPurchaseTimestamp);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, email, password, createdAt, updatedAt);
+    return Objects.hash(userId, username, email, password, createdAt, updatedAt, lastPurchaseTimestamp);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class User {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
+    sb.append("    lastPurchaseTimestamp: ").append(toIndentedString(lastPurchaseTimestamp)).append("\n");
     sb.append("}");
     return sb.toString();
   }
